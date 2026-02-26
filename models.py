@@ -39,3 +39,14 @@ class FinalProject(db.Model):
     submitted = db.Column(db.Boolean, default=False)
     approved = db.Column(db.Boolean, default=False)
     points = db.Column(db.Integer, default=50)
+
+class MCQ(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    day_number = db.Column(db.Integer)
+    domain = db.Column(db.String(50))
+    question = db.Column(db.Text)
+    option_a = db.Column(db.Text)
+    option_b = db.Column(db.Text)
+    option_c = db.Column(db.Text)
+    option_d = db.Column(db.Text)
+    correct_answer = db.Column(db.String(1))  # A/B/C/D
