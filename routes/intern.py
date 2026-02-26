@@ -50,6 +50,7 @@ from models import User, DailyProgress, Blog, FinalProject, MCQ
 from extensions import db
 from werkzeug.utils import secure_filename
 import os
+from flask import current_app
 intern_bp = Blueprint("intern", __name__)
 # @intern_bp.route("/intern/dashboard", methods=["GET"])
 # @jwt_required()
@@ -202,8 +203,12 @@ def upload_leetcode(day):
     if file.filename == "":
         return jsonify({"msg": "Empty filename"}), 400
 
+    
     filename = secure_filename(f"{user.reg_no}_day{day}.pdf")
-    filepath = os.path.join("uploads", filename)
+
+    upload_folder = current_app.config["UPLOAD_FOLDER"]
+    filepath = os.path.join(upload_folder, filename)
+
     file.save(filepath)
 
     progress.leet_pdf_url = filepath
@@ -215,3 +220,72 @@ def upload_leetcode(day):
         "msg": "LeetCode PDF uploaded successfully 💜",
         "status": "Pending Approval"
     })
+@intern_bp.route("/intern/add-blog", methods=["POST"])
+@jwt_required()
+def add_blog():
+
+    identity = get_jwt_identity()
+
+    if identity == "admin":
+        return jsonify({"msg": "Admins cannot add blogs"}), 403
+
+    user_id = int(identity)
+    user = User.query.get(user_id)
+
+    data = request.json
+    blog_date = data.get("date")
+    link = data.get("link")
+
+    if not blog_date or not link:
+        return jsonify({"msg": "Missing fields"}), 400
+
+    blog = Blog(
+        user_id=user_id,
+        blog_date=blog_date,
+        medium_link=link,
+        points=2
+    )
+
+    db.session.add(blog)
+
+    user.total_points += 2
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "Blog added 💜",
+        "new_total_points": user.total_points
+    })
+@intern_bp.route("/intern/submit-final", methods=["POST"])
+@jwt_required()
+def submit_final():
+
+    identity = get_jwt_identity()
+
+    if identity == "admin":
+        return jsonify({"msg": "Admins cannot submit"}), 403
+
+    user_id = int(identity)
+    user = User.query.get(user_id)
+
+    data = request.json
+
+    final = FinalProject.query.filter_by(user_id=user_id).first()
+
+    if final:
+        return jsonify({"msg": "Already submitted"}), 400
+
+    final = FinalProject(
+        user_id=user_id,
+        github_link=data.get("github"),
+        demo_video=data.get("demo"),
+        deployed_link=data.get("deploy"),
+        blog_link=data.get("blog"),
+        submitted=True,
+        approved=False
+    )
+
+    db.session.add(final)
+    db.session.commit()
+
+    return jsonify({"msg": "Final project submitted 💜"})

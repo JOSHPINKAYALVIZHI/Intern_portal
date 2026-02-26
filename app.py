@@ -26,10 +26,15 @@ def create_app():
     def home():
         return "Intern Portal API Running "
 
-    return app
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), "uploads")
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
     @app.route("/uploads/<path:filename>")
     def serve_file(filename):
-       return send_from_directory("uploads", filename)
+        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+
+    return app
 app = create_app()
 
 UPLOAD_FOLDER = "uploads"
