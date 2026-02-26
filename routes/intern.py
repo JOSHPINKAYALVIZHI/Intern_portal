@@ -48,7 +48,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
 from models import User, DailyProgress, Blog, FinalProject, MCQ
 from extensions import db
-
+from werkzeug.utils import secure_filename
+import os
 intern_bp = Blueprint("intern", __name__)
 # @intern_bp.route("/intern/dashboard", methods=["GET"])
 # @jwt_required()
@@ -165,4 +166,52 @@ def submit_mcq(day):
         "msg": "MCQ submitted successfully 💜",
         "score": score,
         "new_total_points": user.total_points
+    })
+
+@intern_bp.route("/intern/upload-leetcode/<int:day>", methods=["POST"])
+@jwt_required()
+def upload_leetcode(day):
+
+    identity = get_jwt_identity()
+
+    if identity == "admin":
+        return jsonify({"msg": "Admins cannot upload"}), 403
+
+    user_id = int(identity)
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    progress = DailyProgress.query.filter_by(
+        user_id=user_id,
+        day_number=day
+    ).first()
+
+    if not progress:
+        return jsonify({"msg": "Invalid day"}), 400
+
+    if progress.leet_pdf_url:
+        return jsonify({"msg": "LeetCode already uploaded for this day"}), 400
+
+    if "file" not in request.files:
+        return jsonify({"msg": "No file uploaded"}), 400
+
+    file = request.files["file"]
+
+    if file.filename == "":
+        return jsonify({"msg": "Empty filename"}), 400
+
+    filename = secure_filename(f"{user.reg_no}_day{day}.pdf")
+    filepath = os.path.join("uploads", filename)
+    file.save(filepath)
+
+    progress.leet_pdf_url = filepath
+    progress.date = date.today()
+
+    db.session.commit()
+
+    return jsonify({
+        "msg": "LeetCode PDF uploaded successfully 💜",
+        "status": "Pending Approval"
     })

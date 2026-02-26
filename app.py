@@ -3,6 +3,11 @@ from flask_cors import CORS
 from config import Config
 from extensions import db, jwt
 from routes.intern import intern_bp
+import os
+from flask import send_from_directory
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 def create_app():
@@ -22,8 +27,14 @@ def create_app():
         return "Intern Portal API Running "
 
     return app
-
+    @app.route("/uploads/<path:filename>")
+    def serve_file(filename):
+       return send_from_directory("uploads", filename)
 app = create_app()
 
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 if __name__ == "__main__":
     app.run(debug=True)
