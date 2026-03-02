@@ -138,27 +138,37 @@ def submit_mcq(day):
     if not progress:
         return jsonify({"msg": "Invalid day"}), 400
 
-    # Prevent reattempt
     if progress.mcq_score > 0:
         return jsonify({"msg": "MCQ already submitted for this day"}), 400
 
-    data = request.json
-    answers = data.get("answers")  # {question_id: "A"}
+    data = request.get_json()
 
-    mcqs = MCQ.query.filter_by(day_number=day, domain=user.domain).all()
+    if not data or "answers" not in data:
+        return jsonify({"msg": "Answers missing"}), 400
+
+    answers = data["answers"]
+
+    if not isinstance(answers, dict):
+        return jsonify({"msg": "Invalid answers format"}), 400
+
+    mcqs = MCQ.query.filter_by(
+        day_number=day,
+        domain=user.domain
+    ).all()
+
+    if not mcqs:
+        return jsonify({"msg": "No MCQs found"}), 404
 
     score = 0
 
     for mcq in mcqs:
-        if str(mcq.id) in answers:
-            if answers[str(mcq.id)] == mcq.correct_answer:
-                score += 2
+        selected = answers.get(str(mcq.id))
+        if selected and selected == mcq.correct_answer:
+            score += 2
 
-    # Update progress
     progress.mcq_score = score
     progress.date = date.today()
 
-    # Update total points
     user.total_points += score
 
     db.session.commit()
