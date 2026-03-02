@@ -1,3 +1,31 @@
+<<<<<<< HEAD
 node_modules/
 client/node_modules/
 .env
+=======
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environment Variables
+.env
+
+# Database
+*.db
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+>>>>>>> 744efb7b2ab0f07376a5e2c0a396c6911f745fe1
