@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-node_modules/
-client/node_modules/
-.env
-=======
 # Virtual Environment
 venv/
 env/
@@ -28,4 +23,7 @@ __pycache__/
 
 # Logs
 *.log
->>>>>>> 744efb7b2ab0f07376a5e2c0a396c6911f745fe1
+
+node_modules/
+dist/
+build/
