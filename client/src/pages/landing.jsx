@@ -1,3 +1,4 @@
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Landing() {
@@ -16,11 +17,11 @@ export default function Landing() {
       </p>
 
       <button
-        onClick={() => navigate("/")}
-        className="bg-primary hover:bg-primaryHover text-white px-8 py-3 rounded-xl shadow-soft transition"
-      >
-        Get Started
-      </button>
+  onClick={() => navigate("/login")}
+  className="bg-primary text-white px-8 py-3 rounded-xl"
+>
+  Get Started
+</button>
 
     </div>
   );

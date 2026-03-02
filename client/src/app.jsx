@@ -1,23 +1,21 @@
-import ProtectedRoute from "./components/common/ProtectedRoute";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import InternDashboard from "./pages/InternDashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import Landing from "./pages/Landing";
 
-<Routes>
-  <Route path="/" element={<Login />} />
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<InternDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
 
-  <Route
-    path="/dashboard"
-    element={
-      <ProtectedRoute role="INTERN">
-        <InternDashboard />
-      </ProtectedRoute>
-    }
-  />
-
-  <Route
-    path="/admin"
-    element={
-      <ProtectedRoute role="ADMIN">
-        <AdminDashboard />
-      </ProtectedRoute>
-    }
-  />
-</Routes>
+export default App;
