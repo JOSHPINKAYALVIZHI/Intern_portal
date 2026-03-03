@@ -24,6 +24,11 @@ __pycache__/
 # Logs
 *.log
 
+# Node
 node_modules/
+client/node_modules/
+
+# Build folders
 dist/
 build/
+coverage/
