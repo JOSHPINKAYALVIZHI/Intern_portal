@@ -5,6 +5,12 @@ from extensions import db, jwt
 from routes.intern import intern_bp
 import os
 from flask import send_from_directory
+from dotenv import load_dotenv
+
+load_dotenv()
+
+JWT_SECRET = os.getenv("JWT_SECRET")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -13,8 +19,9 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
-    print("DATABASE USED:", app.config["SQLALCHEMY_DATABASE_URI"])
-    CORS(app)
+    app.config["DATABASE_URL"] = DATABASE_URL
+    print("DATABASE USED:", app.config["DATABASE_URL"])
+    CORS(app,supports_credentials=True)
 
     db.init_app(app)
     jwt.init_app(app)
