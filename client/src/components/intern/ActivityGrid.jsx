@@ -1,3 +1,4 @@
+import React from "react";
 export default function ActivityGrid({ activity }) {
 
   const getColor = (status) => {
@@ -24,7 +25,7 @@ export default function ActivityGrid({ activity }) {
 
   return (
     <div className="bg-card p-6 rounded-2xl shadow-md mt-8">
-      <h3 className="text-xl text-accent mb-4">21-Day Progress 🌸</h3>
+      <h3 className="text-xl text-accent mb-4">21-Day Progress </h3>
 
       <div className="grid grid-cols-7 gap-3 mb-6">
         {activity.map((item) => (

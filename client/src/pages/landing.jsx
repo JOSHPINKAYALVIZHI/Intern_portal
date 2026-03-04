@@ -8,7 +8,7 @@ export default function Landing() {
     <div className="min-h-screen bg-pastelGradient flex flex-col justify-center items-center text-center animate-fadeIn">
 
       <h1 className="text-5xl font-bold text-accent mb-6 animate-float">
-        Intern Portal 💜
+        Intern Portal 
       </h1>
 
       <p className="text-muted mb-8 max-w-xl">
