@@ -1,48 +1,4 @@
-# from flask import Blueprint, jsonify
-# from flask_jwt_extended import jwt_required, get_jwt_identity
-# from models import User, DailyProgress, Blog, FinalProject
 
-# intern_bp = Blueprint("intern", __name__)
-
-# @intern_bp.route("/intern/dashboard", methods=["GET"])
-# @jwt_required()
-# def get_dashboard():
-
-#     user_id = user_id = int(get_jwt_identity())
-
-#     # If admin token tries to access
-#     if user_id == "admin":
-#         return jsonify({"msg": "Admins cannot access intern dashboard"}), 403
-
-#     user = User.query.get(user_id)
-
-#     if not user:
-#         return jsonify({"msg": "User not found"}), 404
-
-#     progress = DailyProgress.query.filter_by(user_id=user_id).all()
-#     blogs = Blog.query.filter_by(user_id=user_id).all()
-#     final_project = FinalProject.query.filter_by(user_id=user_id).first()
-
-#     return jsonify({
-#         "profile": {
-#             "name": user.name,
-#             "reg_no": user.reg_no,
-#             "department": user.department,
-#             "domain": user.domain,
-#             "total_points": user.total_points
-#         },
-#         "daily_progress": [
-#             {
-#                 "day": p.day_number,
-#                 "mcq_score": p.mcq_score,
-#                 "leet_approved": p.leet_approved,
-#                 "leet_points": p.leet_points
-#             }
-#             for p in progress
-#         ],
-#         "blog_count": len(blogs),
-#         "final_project_submitted": final_project.submitted if final_project else False
-#     })
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import date
@@ -52,69 +8,89 @@ from werkzeug.utils import secure_filename
 import os
 from flask import current_app
 intern_bp = Blueprint("intern", __name__)
-# @intern_bp.route("/intern/dashboard", methods=["GET"])
-# @jwt_required()
-# def get_dashboard():
+@intern_bp.route("/intern/dashboard")
+@jwt_required()
+def dashboard():
 
-#     identity = get_jwt_identity()
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
 
-#     # Prevent admin access
-#     if identity == "admin":
-#         return jsonify({"msg": "Admins cannot access intern dashboard"}), 403
+    if not user.domain:
+        return jsonify({
+            "profile_complete": False,
+            "name": user.name
+        })
 
-#     user_id = int(identity)
-#     user = User.query.get(user_id)
+    progress_list = DailyProgress.query.filter_by(user_id=user_id).all()
 
-#     if not user:
-#         return jsonify({"msg": "User not found"}), 404
+    activity_grid = []
 
-#     # Fetch related data
-#     progress = DailyProgress.query.filter_by(user_id=user_id).order_by(DailyProgress.day_number).all()
-#     blogs = Blog.query.filter_by(user_id=user_id).all()
-#     final_project = FinalProject.query.filter_by(user_id=user_id).first()
+    for p in progress_list:
 
-#     # Build activity grid data
-#     activity_grid = []
+        status = "no_activity"
 
-#     for p in progress:
-#         if p.mcq_score == 0 and not p.leet_approved:
-#             status = "inactive"
-#         elif p.mcq_score > 0 and not p.leet_approved:
-#             status = "mcq_done"
-#         elif p.mcq_score > 0 and p.leet_approved:
-#             status = "full_complete"
-#         else:
-#             status = "inactive"
+        if p.mcq_score > 0 and p.leet_pdf_url:
+            status = "full_complete"
 
-#         activity_grid.append({
-#             "day": p.day_number,
-#             "status": status
-#         })
+        elif p.mcq_score > 0:
+            status = "mcq_done"
 
-#     return jsonify({
-#         "profile": {
-#             "name": user.name,
-#             "reg_no": user.reg_no,
-#             "department": user.department,
-#             "domain": user.domain,
-#             "total_points": user.total_points
-#         },
-#         "progress": [
-#             {
-#                 "day": p.day_number,
-#                 "mcq_score": p.mcq_score,
-#                 "leet_approved": p.leet_approved,
-#                 "leet_points": p.leet_points
-#             }
-#             for p in progress
-#         ],
-#         "blog_count": len(blogs),
-#         "final_project": {
-#             "submitted": final_project.submitted if final_project else False,
-#             "approved": final_project.approved if final_project else False
-#         },
-#         "activity_grid": activity_grid
-#     })
+        activity_grid.append({
+            "day": p.day_number,
+            "status": status
+        })
+
+    blog_count = Blog.query.filter_by(user_id=user_id).count()
+
+    return jsonify({
+        "profile_complete": True,
+        "profile": {
+            "name": user.name,
+            "domain": user.domain,
+            "total_points": user.total_points
+        },
+        "blog_count": blog_count,
+        "activity_grid": activity_grid
+    })
+@intern_bp.route("/intern/setup-profile", methods=["POST"])
+@jwt_required()
+def setup_profile():
+
+    user_id = get_jwt_identity()
+    data = request.json
+
+    user = User.query.get(user_id)
+
+    user.name = data.get("name")
+    user.reg_no = data.get("reg_no")
+    user.domain = data.get("domain")
+    user.college_email = data.get("college_email")
+    user.linkedin = data.get("linkedin")
+    user.github = data.get("github")
+
+    db.session.commit()
+
+    # 🔹 Create 21-day roadmap automatically
+    existing = DailyProgress.query.filter_by(user_id=user_id).first()
+
+    if not existing:
+
+        for day in range(1, 22):
+
+            progress = DailyProgress(
+                user_id=user_id,
+                day_number=day,
+                mcq_score=0,
+                leet_pdf_url=None
+            )
+
+            db.session.add(progress)
+
+        db.session.commit()
+
+    return jsonify({
+        "msg": "Profile saved and roadmap generated 💜"
+    }) 
 @intern_bp.route("/intern/submit-mcq/<int:day>", methods=["POST"])
 @jwt_required()
 def submit_mcq(day):

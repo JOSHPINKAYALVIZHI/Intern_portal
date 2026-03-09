@@ -5,11 +5,11 @@ export const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
 
-  const login = (data) => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("role", data.role);
-    setUser(data);
-  };
+  const login = (token, role) => {
+  localStorage.setItem("token", token);
+  localStorage.setItem("role", role);
+  setUser({ token, role });
+};
 
   const logout = () => {
     localStorage.clear();

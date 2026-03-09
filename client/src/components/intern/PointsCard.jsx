@@ -3,9 +3,17 @@ import { useEffect, useState } from "react";
 import confetti from "canvas-confetti";
 
 export default function PointsCard({ title, value }) {
-  const [displayValue, setDisplayValue] = useState(0);
+
+  const isNumber = typeof value === "number";
+  const [displayValue, setDisplayValue] = useState(isNumber ? 0 : value);
 
   useEffect(() => {
+
+    if (!isNumber) {
+      setDisplayValue(value || "N/A");
+      return;
+    }
+
     if (value > displayValue) {
       confetti({
         particleCount: 60,
@@ -15,16 +23,22 @@ export default function PointsCard({ title, value }) {
     }
 
     let start = 0;
+
     const interval = setInterval(() => {
+
       start += Math.ceil(value / 20);
+
       if (start >= value) {
         start = value;
         clearInterval(interval);
       }
+
       setDisplayValue(start);
+
     }, 30);
 
     return () => clearInterval(interval);
+
   }, [value]);
 
   return (

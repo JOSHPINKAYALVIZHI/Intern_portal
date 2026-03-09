@@ -1,5 +1,6 @@
 import React from "react";
-export default function ActivityGrid({ activity }) {
+
+export default function ActivityGrid({ activity = [] }) {
 
   const getColor = (status) => {
     switch (status) {
@@ -25,18 +26,26 @@ export default function ActivityGrid({ activity }) {
 
   return (
     <div className="bg-card p-6 rounded-2xl shadow-md mt-8">
-      <h3 className="text-xl text-accent mb-4">21-Day Progress </h3>
+      <h3 className="text-xl text-accent mb-4">21-Day Progress</h3>
 
       <div className="grid grid-cols-7 gap-3 mb-6">
-        {activity.map((item) => (
-          <div
-            key={item.day}
-            title={getLabel(item.status)}
-            className={`h-12 rounded-lg flex items-center justify-center text-sm font-semibold text-white cursor-pointer transition hover:scale-105 ${getColor(item.status)}`}
-          >
-            {item.day}
-          </div>
-        ))}
+
+        {activity.length === 0 ? (
+          <p className="text-gray-400 col-span-7 text-center">
+            No progress yet
+          </p>
+        ) : (
+          activity.map((item, index) => (
+            <div
+              key={index}
+              title={getLabel(item?.status)}
+              className={`h-12 rounded-lg flex items-center justify-center text-sm font-semibold text-white cursor-pointer transition hover:scale-105 ${getColor(item?.status)}`}
+            >
+              {item?.day}
+            </div>
+          ))
+        )}
+
       </div>
 
       {/* Legend */}
@@ -56,6 +65,7 @@ export default function ActivityGrid({ activity }) {
           <span>Full Complete</span>
         </div>
       </div>
+
     </div>
   );
 }
