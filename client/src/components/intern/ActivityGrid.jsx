@@ -41,7 +41,10 @@ export default function ActivityGrid({ activity = [] }) {
               title={getLabel(item?.status)}
               className={`h-12 rounded-lg flex items-center justify-center text-sm font-semibold text-white cursor-pointer transition hover:scale-105 ${getColor(item?.status)}`}
             >
-              {item?.day}
+              <div className="text-center">
+              <div className="font-bold">{item.day}</div>
+              <div className="text-xs mt-1">{item.task}</div>
+</div>
             </div>
           ))
         )}

@@ -22,7 +22,12 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
     # Allow React frontend
-    CORS(app)
+    CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    allow_headers=["Content-Type", "Authorization"],
+    supports_credentials=True
+)
 
     # Initialize extensions
     db.init_app(app)

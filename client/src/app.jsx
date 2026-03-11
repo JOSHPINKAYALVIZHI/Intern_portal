@@ -5,6 +5,7 @@ import InternDashboard from "./pages/InternDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import Landing from "./pages/landing";
 import ProfileSetup from "./pages/ProfileSetup";
+import Profile from  "./pages/profile";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/dashboard" element={<InternDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/setup-profile" element={<ProfileSetup />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

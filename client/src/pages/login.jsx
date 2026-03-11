@@ -15,13 +15,14 @@ export default function Login() {
     try {
 
       const res = await API.post("/login", {
-        reg_no,
-        password
+       reg_no,
+       
+       password
       });
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
 
-      login(res.data.token, res.data.role);
-
-      if (res.data.role === "admin") {
+      if (res.data.role === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/dashboard");

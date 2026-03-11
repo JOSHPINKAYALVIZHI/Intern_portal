@@ -32,19 +32,18 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
 
         <h1 className="text-white text-xl font-semibold animate-fadeIn">
-          Intern Portal 💜
+          Intern Portal 
         </h1>
 
         <div className="flex items-center gap-4">
-
+        <button
+          onClick={() => navigate("/profile")}
+          className="mr-4"
+        >
+          Profile
+        </button>
           {/* Dark Mode Toggle */}
-          <button
-            onClick={toggleDark}
-            className="bg-white/30 dark:bg-white/10 backdrop-blur-md px-3 py-2 rounded-xl text-white hover:scale-105 transition"
-          >
-            {dark ? "☀️" : "🌙"}
-          </button>
-
+         
           {/* Logout */}
           <button
             onClick={handleLogout}
@@ -52,7 +51,7 @@ export default function Navbar() {
           >
             Logout
           </button>
-
+         
         </div>
       </div>
     </nav>
