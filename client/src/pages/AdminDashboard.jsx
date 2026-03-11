@@ -6,15 +6,21 @@ export default function AdminDashboard() {
 
   return (
 
-    <div className="p-10">
+    <div className="min-h-screen bg-gray-50 p-10">
 
-      <h1 className="text-3xl font-bold mb-8">
+      <h1 className="text-3xl font-bold mb-8 text-purple-700">
         Admin Dashboard
       </h1>
 
-      <ApprovalPanel />
+      {/* Pending Approvals */}
+      <div className="mb-10">
+        <ApprovalPanel />
+      </div>
 
-      <InternTable />
+      {/* Intern Leaderboard */}
+      <div>
+        <InternTable />
+      </div>
 
     </div>
 

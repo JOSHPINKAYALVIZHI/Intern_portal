@@ -140,50 +140,43 @@ def dashboard():
     if not profile:
         return jsonify({"profile_complete": False})
 
-    # check if roadmap already exists
     progress = DailyProgress.query.filter_by(user_id=user_id).all()
 
     roadmap = ROADMAPS.get(profile.domain, [])
 
-    # create roadmap automatically if missing
+    # Create roadmap rows if none exist
     if len(progress) == 0:
 
-        for i, item in enumerate(roadmap, start=1):
-
+        for i in range(1, 22):
             progress_row = DailyProgress(
                 user_id=user_id,
                 day_number=i,
-                task=item["title"],
+                task=f"Day {i} Task",
                 mcq_score=0
             )
-
             db.session.add(progress_row)
 
         db.session.commit()
 
-        progress = DailyProgress.query.filter_by(user_id=user_id).all()
-
     activity = []
 
-    for p in progress:
+    for i in range(1, 22):
 
-        if p.day_number > len(roadmap):
-            continue
+        progress_row = DailyProgress.query.filter_by(
+            user_id=user_id,
+            day_number=i
+        ).first()
 
         status = "no_activity"
 
-        if p.mcq_score > 0 and p.leetcode_pdf:
-            status = "full_complete"
-        elif p.mcq_score > 0:
-            status = "mcq_done"
-
-        phase_data = roadmap[p.day_number - 1]
+        if progress_row:
+            if progress_row.daily_doc_url and progress_row.leetcode_pdf:
+                status = "complete"
+            elif progress_row.daily_doc_url or progress_row.leetcode_pdf:
+                status = "partial"
 
         activity.append({
-            "day": p.day_number,
-            "phase": phase_data["phase"],
-            "title": phase_data["title"],
-            "description": phase_data["description"],
+            "day": i,
             "status": status
         })
 
@@ -197,7 +190,8 @@ def dashboard():
             "total_points": profile.total_points
         },
         "blog_count": blog_count,
-        "activity_grid": activity
+        "activity_grid": activity,
+        "roadmap": roadmap
     })
 # ---------------------------------------
 # PROFILE SETUP
@@ -304,11 +298,22 @@ def upload_doc(day):
     file.save(path)
 
     progress = DailyProgress.query.filter_by(
+    user_id=user_id,
+    day_number=day
+).first()
+    profile = Profile.query.filter_by(user_id=user_id).first()
+    profile.total_points += 5
+
+    if not progress:
+        progress = DailyProgress(
         user_id=user_id,
         day_number=day
-    ).first()
+    )
+    db.session.add(progress)
 
     progress.daily_doc_url = path
+
+    
 
     db.session.commit()
 
@@ -329,9 +334,17 @@ def upload_leetcode(day):
     file.save(path)
 
     progress = DailyProgress.query.filter_by(
+    user_id=user_id,
+    day_number=day
+).first()
+    profile = Profile.query.filter_by(user_id=user_id).first()
+    profile.total_points += 5
+    if not progress:
+        progress = DailyProgress(
         user_id=user_id,
         day_number=day
-    ).first()
+    )
+    db.session.add(progress)
 
     progress.leetcode_pdf = path
 

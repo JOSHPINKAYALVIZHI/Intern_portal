@@ -1,3 +1,5 @@
+from models import Profile
+
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Blog, FinalProject, User, DailyProgress
@@ -134,7 +136,7 @@ def get_intern_details(user_id):
         return jsonify({"msg": "Only admin allowed"}), 403
 
     user = User.query.get(user_id)
-
+    profile = Profile.query.filter_by(user_id=user_id).first()
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
@@ -146,13 +148,20 @@ def get_intern_details(user_id):
 
     return jsonify({
 
-        "profile": {
-            "name": user.name,
-            "reg_no": user.reg_no,
-            "domain": user.domain,
-            "total_points": user.total_points
-        },
-
+       "profile": {
+             "name": profile.name,
+              "reg_no": profile.reg_no,
+               "domain": profile.domain,
+              "college_email": profile.college_email,
+            "linkedin": profile.linkedin,
+            "github": profile.github,
+            "total_points": profile.total_points
+            
+    
+       },
+   
+    
+    
         "progress": [
             {
                 "day": p.day_number,
