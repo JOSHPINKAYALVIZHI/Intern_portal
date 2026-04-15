@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Landing from "./pages/landing";
 import ProfileSetup from "./pages/ProfileSetup";
 import Profile from  "./pages/profile";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
   return (
@@ -13,8 +14,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<InternDashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/dashboard" element={<ProtectedRoute role="INTERN"><InternDashboard /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute role="ADMIN"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/setup-profile" element={<ProfileSetup />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>

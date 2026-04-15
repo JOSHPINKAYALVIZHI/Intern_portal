@@ -13,7 +13,7 @@ export default function Landing() {
 
       <p className="text-muted mb-8 max-w-xl">
         21-Day Internship Program with Real-time Progress Tracking,
-        MCQs, LeetCode, Blogs & Final Project Submission.
+       , LeetCode, Blogs & Final Project Submission.
       </p>
 
       <button

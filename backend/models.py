@@ -21,28 +21,46 @@ class Profile(db.Model):
     total_points = db.Column(db.Integer, default=0)
     
 
+# class DailyProgress(db.Model):
+
+#     __tablename__ = "daily_progress"
+
+#     id = db.Column(db.Integer, primary_key=True)
+
+#     user_id = db.Column(db.Integer)
+
+#     day_number = db.Column(db.Integer)
+
+#     task = db.Column(db.Text)
+
+#     mcq_score = db.Column(db.Integer, default=0)
+
+#     daily_doc_url = db.Column(db.Text)
+
+#     leetcode_pdf = db.Column(db.Text)
+
+#     completed = db.Column(db.Boolean, default=False)
+
+#     date = db.Column(db.Date)
 class DailyProgress(db.Model):
 
-    __tablename__ = "daily_progress"
-
     id = db.Column(db.Integer, primary_key=True)
-
     user_id = db.Column(db.Integer)
-
     day_number = db.Column(db.Integer)
 
-    task = db.Column(db.Text)
+    task = db.Column(db.String(200))
 
-    mcq_score = db.Column(db.Integer, default=0)
+    # FILES
+    daily_doc_url = db.Column(db.String(300))
+    leetcode_pdf = db.Column(db.String(300))
 
-    daily_doc_url = db.Column(db.Text)
+    # ✅ ADD THIS
+    leet_approved = db.Column(db.Boolean, default=False)
 
-    leetcode_pdf = db.Column(db.Text)
+    # OPTIONAL (recommended)
+    leet_points = db.Column(db.Integer, default=0)
 
-    completed = db.Column(db.Boolean, default=False)
-
-    date = db.Column(db.Date)
-
+    
 
 
 class User(db.Model):
@@ -75,14 +93,3 @@ class FinalProject(db.Model):
     submitted = db.Column(db.Boolean, default=False)
     approved = db.Column(db.Boolean, default=False)
     points = db.Column(db.Integer, default=50)
-
-class MCQ(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    day_number = db.Column(db.Integer)
-    domain = db.Column(db.String(50))
-    question = db.Column(db.Text)
-    option_a = db.Column(db.Text)
-    option_b = db.Column(db.Text)
-    option_c = db.Column(db.Text)
-    option_d = db.Column(db.Text)
-    correct_answer = db.Column(db.String(1))  # A/B/C/D

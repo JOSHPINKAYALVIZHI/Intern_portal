@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from models import User, DailyProgress, Blog, FinalProject, MCQ, Profile
+from models import User, DailyProgress, Blog, FinalProject,  Profile
 from extensions import db
+import os
 
 intern_bp = Blueprint("intern", __name__)
 
@@ -134,7 +135,16 @@ ROADMAPS = {
 def dashboard():
 
     user_id = get_jwt_identity()
-
+    
+    # Handle both admin and intern logins
+    if user_id == "admin":
+        return jsonify({"error": "Admins cannot access intern dashboard"}), 403
+    
+    try:
+        user_id = int(user_id)
+    except:
+        return jsonify({"error": "Invalid user ID"}), 400
+    user = User.query.get(user_id)
     profile = Profile.query.filter_by(user_id=user_id).first()
 
     if not profile:
@@ -152,7 +162,7 @@ def dashboard():
                 user_id=user_id,
                 day_number=i,
                 task=f"Day {i} Task",
-                mcq_score=0
+               
             )
             db.session.add(progress_row)
 
@@ -243,7 +253,7 @@ def setup_profile():
                 user_id=user_id,
                 day_number=i,
                 task=item["title"],
-                mcq_score=0
+                
             )
 
             db.session.add(progress)
@@ -293,9 +303,11 @@ def upload_doc(day):
     file = request.files["file"]
 
     filename = f"{user_id}_day{day}_doc.pdf"
-    path = f"uploads/{filename}"
-
-    file.save(path)
+    filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+    
+    file.save(filepath)
+    
+    file_url = f"http://localhost:5000/uploads/{filename}"
 
     progress = DailyProgress.query.filter_by(
     user_id=user_id,
@@ -311,9 +323,7 @@ def upload_doc(day):
     )
     db.session.add(progress)
 
-    progress.daily_doc_url = path
-
-    
+    progress.daily_doc_url = file_url
 
     db.session.commit()
 
@@ -329,9 +339,11 @@ def upload_leetcode(day):
     file = request.files["file"]
 
     filename = f"{user_id}_day{day}_leetcode.pdf"
-    path = f"uploads/{filename}"
-
-    file.save(path)
+    filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+    
+    file.save(filepath)
+    
+    file_url = f"http://localhost:5000/uploads/{filename}"
 
     progress = DailyProgress.query.filter_by(
     user_id=user_id,
@@ -346,7 +358,7 @@ def upload_leetcode(day):
     )
     db.session.add(progress)
 
-    progress.leetcode_pdf = path
+    progress.leetcode_pdf = file_url
 
     db.session.commit()
 

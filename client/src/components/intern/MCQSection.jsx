@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 
 export default function MCQSection({ activity, refreshDashboard }) {
   const [currentDay, setCurrentDay] = useState(null);
-  const [mcqs, setMcqs] = useState([]);
+
   const [answers, setAnswers] = useState({});
   const [message, setMessage] = useState("");
   const [submitted, setSubmitted] = useState(false);

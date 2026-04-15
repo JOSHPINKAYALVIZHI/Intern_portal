@@ -1,66 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import API from "../../api/api";
 
-export default function InternTable() {
 
+export default function InternTable() {
   const [users, setUsers] = useState([]);
 
-  const fetchLeaderboard = async () => {
-
-    const res = await API.get("/admin/leaderboard");
-
-    setUsers(res.data);
-  };
-
   useEffect(() => {
+    const fetchLeaderboard = async () => {
+      try {
+        const response = await API.get("/admin/leaderboard");
+        console.log("Response:", response.data); // Debug log
+        setUsers(Array.isArray(response.data) ? response.data : []);
+      } catch (error) {
+        console.error("Error:", error);
+        setUsers([]);
+      }
+    };
     fetchLeaderboard();
   }, []);
 
   return (
+    <div className="card">
+      <h3>Intern Leaderboard</h3>
 
-    <div className="bg-white shadow p-6 rounded-xl">
-
-      <h2 className="text-xl font-semibold mb-4">
-        Intern Leaderboard
-      </h2>
-
-      <table className="w-full">
-
+      <table>
         <thead>
-
-          <tr className="border-b">
-
-            <th className="p-2 text-left">Rank</th>
-            <th className="p-2 text-left">Name</th>
-            <th className="p-2 text-left">Register No</th>
-            <th className="p-2 text-left">Points</th>
-
+          <tr>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Register No</th>
+            <th>Points</th>
           </tr>
-
         </thead>
 
         <tbody>
-
-          {users.map((u, i) => (
-
-            <tr key={i} className="border-b">
-
-              <td className="p-2">{i + 1}</td>
-
-              <td className="p-2">{u.name}</td>
-
-              <td className="p-2">{u.reg_no}</td>
-
-              <td className="p-2 font-semibold">{u.points}</td>
-
+          {users.map((u, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{u.name}</td>
+              <td>{u.reg_no}</td>
+              <td>{u.points}</td>
             </tr>
-
           ))}
-
         </tbody>
-
       </table>
-
     </div>
   );
 }

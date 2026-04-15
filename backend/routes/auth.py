@@ -59,7 +59,7 @@ def login():
     # Intern Login
     # ------------------------------------------------
     token = create_access_token(
-        identity=user.id,
+        identity=str(user.id),
         expires_delta=datetime.timedelta(days=1)
     )
 

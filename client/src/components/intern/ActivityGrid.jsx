@@ -4,8 +4,7 @@ export default function ActivityGrid({ activity = [] }) {
 
   const getColor = (status) => {
     switch (status) {
-      case "mcq_done":
-        return "bg-[#D9C2FF]";
+     
       case "full_complete":
         return "bg-[#A78BFA]";
       default:
@@ -15,8 +14,7 @@ export default function ActivityGrid({ activity = [] }) {
 
   const getLabel = (status) => {
     switch (status) {
-      case "mcq_done":
-        return "MCQ Completed";
+      
       case "full_complete":
         return "Full Completion";
       default:
