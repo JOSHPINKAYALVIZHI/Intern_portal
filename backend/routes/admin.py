@@ -127,7 +127,7 @@ def approve_by_id(progress_id):
     db.session.commit()
 
     return jsonify({
-        "msg": "LeetCode Approved 💜",
+        "msg": "LeetCode Approved",
         "user": user.name,
         "day": progress.day_number,
         "points_added": 5,
@@ -159,7 +159,7 @@ def reject_by_id(progress_id):
 
     db.session.commit()
 
-    return jsonify({"msg": "Submission rejected ❌"})
+    return jsonify({"msg": "Submission rejected"})
 
 # ---------------------------------------------------------  
 # APPROVE LEETCODE SUBMISSION
@@ -203,7 +203,7 @@ def approve_leetcode(user_id, day):
     db.session.commit()
 
     return jsonify({
-        "msg": "LeetCode Approved 💜",
+        "msg": "LeetCode Approved",
         "user": user.name,
         "day": day,
         "points_added": 5,
@@ -236,7 +236,7 @@ def reject_leetcode(user_id, day):
 
     db.session.commit()
 
-    return jsonify({"msg": "Submission rejected ❌"})
+    return jsonify({"msg": "Submission rejected"})
 
 
 # ---------------------------------------------------------  
@@ -270,7 +270,7 @@ def approve_final(user_id):
     db.session.commit()
 
     return jsonify({
-        "msg": "Final project approved 💜",
+        "msg": "Final project approved",
         "points_added": 50,
         "total_points": user.total_points
     })

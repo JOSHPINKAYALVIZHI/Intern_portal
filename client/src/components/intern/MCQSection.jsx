@@ -63,7 +63,7 @@ export default function MCQSection({ activity, refreshDashboard }) {
   return (
     <div className="bg-card p-6 rounded-2xl shadow-md mt-8">
       <h3 className="text-xl text-accent mb-4">
-        Day {currentDay} MCQs 📝
+        Day {currentDay} MCQs
       </h3>
 
       {mcqs.map((q) => (
@@ -95,7 +95,7 @@ export default function MCQSection({ activity, refreshDashboard }) {
 
       {submitted && (
         <p className="mt-4 text-green-600 font-medium">
-          ✅ Submitted Successfully
+          Submitted Successfully
         </p>
       )}
 

@@ -13,7 +13,7 @@ export default function BlogSection({ refreshDashboard }) {
 
   return (
     <div className="bg-card p-6 rounded-2xl shadow-md mt-8">
-      <h3 className="text-xl text-accent mb-4">Submit Blog 📝</h3>
+      <h3 className="text-xl text-accent mb-4">Submit Blog</h3>
 
       <input
         type="date"

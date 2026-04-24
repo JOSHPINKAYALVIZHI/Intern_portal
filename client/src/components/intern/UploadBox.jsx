@@ -26,7 +26,7 @@ export default function UploadBox({ activity }) {
     }
 
     if (!currentDay) {
-      setMessage("All days completed 🎉");
+      setMessage("All days completed");
       return;
     }
 

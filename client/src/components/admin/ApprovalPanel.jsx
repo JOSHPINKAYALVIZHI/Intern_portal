@@ -35,7 +35,7 @@ export default function ApprovalPanel() {
       </h2>
 
       {pending.length === 0 ? (
-        <p className="text-gray-500">🚀 No pending submissions</p>
+        <p className="text-gray-500">No pending submissions</p>
       ) : (
         // pending.map((item) => (
         //   <div key={item.id} className="border-b py-3">

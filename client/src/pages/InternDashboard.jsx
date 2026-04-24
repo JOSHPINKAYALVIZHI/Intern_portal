@@ -327,7 +327,7 @@ Upload
 
 <div className="space-y-4">
 
-<h3 className="font-semibold text-lg text-purple-600">
+<h3 className="font-semibold text-lg text-blue-700">
 Final Project Submission
 </h3>
 
@@ -404,7 +404,7 @@ onChange={(e)=>setBlogLinks({
 
 <button
 onClick={()=>submitBlog(d.day)}
-className="ml-3 bg-purple-500 text-white px-4 py-2 rounded"
+className="ml-3 bg-blue-700 text-white px-4 py-2 rounded"
 >
 Submit Blog
 </button>
