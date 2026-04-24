@@ -93,3 +93,14 @@ class FinalProject(db.Model):
     submitted = db.Column(db.Boolean, default=False)
     approved = db.Column(db.Boolean, default=False)
     points = db.Column(db.Integer, default=50)
+
+
+class Attendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    day_number = db.Column(db.Integer)
+    entry_time = db.Column(db.DateTime)
+    exit_time = db.Column(db.DateTime)
+    status = db.Column(db.String(20), default="present")  # present, absent, leave
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

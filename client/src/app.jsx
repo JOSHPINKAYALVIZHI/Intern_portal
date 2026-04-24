@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Landing from "./pages/landing";
 import ProfileSetup from "./pages/ProfileSetup";
 import Profile from  "./pages/profile";
+import ProfileEdit from "./pages/ProfileEdit";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/admin" element={<ProtectedRoute role="ADMIN"><AdminDashboard /></ProtectedRoute>} />
         <Route path="/setup-profile" element={<ProfileSetup />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile-edit" element={<ProtectedRoute role="INTERN"><ProfileEdit /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

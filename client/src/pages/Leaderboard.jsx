@@ -11,7 +11,7 @@ export default function Leaderboard() {
 
   return (
     <div className="bg-background min-h-screen p-8">
-      <h2 className="text-3xl text-accent mb-6">Leaderboard 🏆</h2>
+      <h2 className="text-3xl text-accent mb-6">Leaderboard</h2>
 
       {leaders.map((user, index) => (
         <div

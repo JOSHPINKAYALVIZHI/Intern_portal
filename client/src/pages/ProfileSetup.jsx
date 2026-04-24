@@ -37,7 +37,7 @@ export default function ProfileSetup() {
 
       await API.post("/intern/setup-profile", form);
 
-      alert("Profile created successfully 🚀");
+      alert("Profile created successfully");
 
       navigate("/dashboard");
 
@@ -56,7 +56,7 @@ export default function ProfileSetup() {
       <div className="bg-card p-10 rounded-2xl shadow-xl w-[420px]">
 
         <h1 className="text-3xl font-bold text-accent mb-2">
-          Welcome 👋
+          Welcome
         </h1>
 
         <p className="text-textDark mb-6">

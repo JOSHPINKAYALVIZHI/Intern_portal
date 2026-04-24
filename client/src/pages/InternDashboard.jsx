@@ -196,7 +196,7 @@ const progressPercent = Math.round(
         <div className="relative">
 
 {/* Center vertical line */}
-<div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-purple-300"></div>
+<div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gray-300"></div>
 
 {roadmap.map((r,index)=>(
 
@@ -214,7 +214,7 @@ index % 2 === 0 ? "justify-start" : "justify-end"
 
 <div className="bg-gray-50 p-5 rounded-xl shadow-lg hover:scale-105 transition">
 
-<p className="text-purple-600 font-semibold">{r.phase}</p>
+<p className="text-blue-900 font-semibold">{r.phase}</p>
 
 <h3 className="text-lg font-bold mt-1">{r.title}</h3>
 
@@ -230,7 +230,7 @@ index % 2 === 0 ? "justify-start" : "justify-end"
 
 <div className="relative flex items-center justify-center w-2/12">
 
-<div className="w-5 h-5 bg-purple-500 rounded-full shadow-lg shadow-purple-400/50 z-10"></div>
+<div className="w-5 h-5 bg-blue-900 rounded-full shadow-lg shadow-blue-900/50 z-10"></div>
 
 </div>
 
@@ -242,7 +242,7 @@ index % 2 === 0 ? "justify-start" : "justify-end"
 
 <div className="bg-gray-50 p-5 rounded-xl shadow-lg hover:scale-105 transition">
 
-<p className="text-purple-600 font-semibold">{r.phase}</p>
+<p className="text-blue-900 font-semibold">{r.phase}</p>
 
 <h3 className="text-lg font-bold mt-1">{r.title}</h3>
 
@@ -315,7 +315,7 @@ className="border p-1 rounded"
 
 <button
 onClick={()=>uploadLeetCode(d.day)}
-className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 rounded"
+className="bg-blue-900 hover:bg-blue-950 text-white px-4 py-1 rounded"
 >
 Upload
 </button>

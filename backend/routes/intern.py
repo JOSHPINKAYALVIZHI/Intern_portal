@@ -196,8 +196,13 @@ def dashboard():
         "profile_complete": True,
         "profile": {
             "name": profile.name,
+            "reg_no": user.reg_no,
+            "department": user.department,
             "domain": profile.domain,
-            "total_points": profile.total_points
+            "college_email": profile.college_email,
+            "linkedin": profile.linkedin,
+            "github": profile.github,
+            "total_points": user.total_points if user.total_points else 0
         },
         "blog_count": blog_count,
         "activity_grid": activity,
@@ -418,3 +423,66 @@ def submit_final():
     db.session.commit()
 
     return jsonify({"msg": "Final project submitted"})
+
+
+# ----------------------------------------
+# GET INTERN'S OWN SUBMISSIONS (VIEW UPLOADS)
+# ----------------------------------------
+@intern_bp.route("/intern/my-submissions", methods=["GET"])
+@jwt_required()
+def get_my_submissions():
+    user_id = int(get_jwt_identity())
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+    
+    profile = Profile.query.filter_by(user_id=user_id).first()
+    submissions = DailyProgress.query.filter_by(user_id=user_id).order_by(DailyProgress.day_number).all()
+    
+    data = []
+    for sub in submissions:
+        data.append({
+            "day": sub.day_number,
+            "daily_doc_url": sub.daily_doc_url,
+            "leetcode_pdf": sub.leetcode_pdf,
+            "leet_approved": sub.leet_approved,
+            "leet_points": sub.leet_points
+        })
+    
+    return jsonify({
+        "profile": {
+            "name": profile.name if profile else user.name,
+            "reg_no": user.reg_no,
+            "domain": profile.domain if profile else "Unknown"
+        },
+        "submissions": data
+    })
+
+
+# ----------------------------------------
+# UPDATE PROFILE (EDIT)
+# ----------------------------------------
+@intern_bp.route("/intern/update-profile", methods=["POST"])
+@jwt_required()
+def update_profile():
+    user_id = int(get_jwt_identity())
+    data = request.json
+    
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+    
+    profile = Profile.query.filter_by(user_id=user_id).first()
+    if not profile:
+        return jsonify({"msg": "Profile not found"}), 404
+    
+    # Update allowed fields
+    profile.name = data.get("name", profile.name)
+    profile.college_email = data.get("college_email", profile.college_email)
+    profile.linkedin = data.get("linkedin", profile.linkedin)
+    profile.github = data.get("github", profile.github)
+    
+    db.session.commit()
+    
+    return jsonify({"msg": "Profile updated successfully"})
