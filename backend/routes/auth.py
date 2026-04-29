@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models import User
 from extensions import db
 from flask_jwt_extended import create_access_token
+from werkzeug.security import check_password_hash
 import datetime
 
 auth_bp = Blueprint("auth", __name__)
@@ -35,7 +36,7 @@ def login():
     # ------------------------------------------------
     user = User.query.filter_by(reg_no=reg_no).first()
 
-    if not user or user.password != password:
+    if not user or not check_password_hash(user.password, password):
         return jsonify({"msg": "Invalid credentials"}), 401
 
 

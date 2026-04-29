@@ -186,9 +186,11 @@ def dashboard():
                 status = "partial"
 
         activity.append({
-            "day": i,
-            "status": status
-        })
+        "day": i,
+        "status": status,
+        "doc_url": progress_row.daily_doc_url if progress_row else None,
+        "leetcode_url": progress_row.leetcode_pdf if progress_row else None
+})
 
     blog_count = Blog.query.filter_by(user_id=user_id).count()
 
@@ -197,7 +199,7 @@ def dashboard():
         "profile": {
             "name": profile.name,
             "reg_no": user.reg_no,
-            "department": user.department,
+            "department": profile.department,
             "domain": profile.domain,
             "college_email": profile.college_email,
             "linkedin": profile.linkedin,
@@ -226,6 +228,7 @@ def setup_profile():
         profile = Profile(
             user_id=user_id,
             name=data.get("name"),
+            department=data.get("department"),
             reg_no=data.get("reg_no"),
             domain=data.get("domain"),
             college_email=data.get("college_email"),
@@ -239,8 +242,10 @@ def setup_profile():
     else:
 
         profile.name = data.get("name")
+        # profile.department = data.get("department")
         profile.domain = data.get("domain")
         profile.college_email = data.get("college_email")
+        profile.department = data.get("department")
         profile.linkedin = data.get("linkedin")
         profile.github = data.get("github")
 
@@ -480,6 +485,7 @@ def update_profile():
     # Update allowed fields
     profile.name = data.get("name", profile.name)
     profile.college_email = data.get("college_email", profile.college_email)
+    profile.department = data.get("department", profile.department)
     profile.linkedin = data.get("linkedin", profile.linkedin)
     profile.github = data.get("github", profile.github)
     

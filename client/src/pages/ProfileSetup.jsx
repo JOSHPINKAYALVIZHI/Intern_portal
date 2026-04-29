@@ -28,7 +28,7 @@ export default function ProfileSetup() {
 
     try {
 
-      if (!form.name || !form.reg_no || !form.domain) {
+      if (!form.name || !form.department || !form.reg_no || !form.domain) {
         alert("Please fill required fields");
         return;
       }
@@ -73,6 +73,13 @@ export default function ProfileSetup() {
             name="name"
             placeholder="Full Name"
             value={form.name}
+            onChange={handleChange}
+            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent"
+          />
+          <input
+            name="department"
+            placeholder="Department"
+            value={form.department}
             onChange={handleChange}
             className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-accent"
           />

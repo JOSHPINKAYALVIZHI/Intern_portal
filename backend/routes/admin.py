@@ -316,7 +316,7 @@ def get_all_interns_detailed():
             "user_id": user.id,
             "name": profile.name,
             "reg_no": profile.reg_no,
-            "department": user.department,
+            "department": profile.department,
             "domain": profile.domain,
             "college_email": profile.college_email,
             "total_points": user.total_points if user.total_points else 0,
@@ -361,6 +361,7 @@ def get_intern_details(user_id):
 
         "profile": {
             "name": profile.name,
+            "department": user.department,
             "reg_no": profile.reg_no,
             "domain": profile.domain,
             "college_email": profile.college_email,
@@ -596,7 +597,7 @@ def get_all_attendance():
             "user_id": user.id,
             "name": profile.name if profile else user.name,
             "reg_no": user.reg_no,
-            "department": user.department,
+            "department": profile.department,
             "domain": user.domain,
             "attendance": user_attendance
         })

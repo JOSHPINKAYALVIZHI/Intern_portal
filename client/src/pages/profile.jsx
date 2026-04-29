@@ -32,6 +32,7 @@ export default function Profile() {
   const fetchProfile = async () => {
     try {
       const res = await API.get("/dashboard");
+       console.log( res.data);
       setProfile(res.data.profile);
       setRoadmap(res.data.activity_grid);
     } catch (err) {

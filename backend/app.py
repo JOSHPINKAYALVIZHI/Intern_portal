@@ -1,6 +1,7 @@
 
 from flask import Flask, send_from_directory, send_file
 from flask_cors import CORS
+# from backend.models import User
 from config import Config
 from extensions import db, jwt
 from routes.intern import intern_bp
@@ -8,6 +9,8 @@ from routes.auth import auth_bp
 import os
 from dotenv import load_dotenv
 from routes.admin import admin_bp
+from werkzeug.security import generate_password_hash
+from models import User, db
 
 
 load_dotenv()
@@ -18,7 +21,7 @@ def create_app():
     # Configure CORS for React frontend
     CORS(
         app,
-        resources={r"/*": {"origins": ["http://localhost:5173", "http://localhost:3000"]}},
+        resources={r"/*": {"origins": ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]}},
         allow_headers=["Content-Type", "Authorization"],
         supports_credentials=True
     )
@@ -34,8 +37,7 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     jwt.init_app(app)
-    with app.app_context():
-        db.create_all()
+    print(generate_password_hash("intern2026"))
     # Register routes
     app.register_blueprint(auth_bp)
     app.register_blueprint(intern_bp)

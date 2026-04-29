@@ -12,6 +12,14 @@ import ProtectedRoute from "./components/common/ProtectedRoute";
 function App() {
   return (
     <BrowserRouter>
+     <div className="flex flex-col min-h-screen bg-background">
+      {/* <img 
+        src="/logo.png" 
+        alt="IPS Tech Community"
+        className="fixed top-4 left-4 w-12 z-50"
+      /> */}
+          
+        
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
@@ -20,7 +28,13 @@ function App() {
         <Route path="/setup-profile" element={<ProfileSetup />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile-edit" element={<ProtectedRoute role="INTERN"><ProfileEdit /></ProtectedRoute>} />
+        
       </Routes>
+      {/* 🔻 FOOTER */}
+       <footer className="text-center p-3 text-sm text-muted bg-card">
+          Powered by <span className="text-primary font-medium">IPS TECH COMMUNITY</span>
+        </footer> 
+      </div>
     </BrowserRouter>
   );
 }

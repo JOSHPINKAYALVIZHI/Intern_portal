@@ -11,11 +11,11 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
 
   // Create User State
-  const [newUserForm, setNewUserForm] = useState({
-    name: "",
-    password: ""
-  });
-  const [createUserMessage, setCreateUserMessage] = useState("");
+  // const [newUserForm, setNewUserForm] = useState({
+  //   name: "",
+  //   password: ""
+  // });
+  // const [createUserMessage, setCreateUserMessage] = useState("");
 
   // Attendance Form State
   const [attendanceForm, setAttendanceForm] = useState({
@@ -60,32 +60,32 @@ export default function AdminDashboard() {
   };
 
   // Create new user
-  const handleCreateUser = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await API.post("/admin/create-user", newUserForm);
-      setCreateUserMessage("User created successfully!");
-      setNewUserForm({
-        name: "",
-        password: ""
-      });
-      fetchData();
-      setTimeout(() => setCreateUserMessage(""), 3000);
-    } catch (err) {
-      setCreateUserMessage("Error: " + (err.response?.data?.msg || "Failed to create user"));
-    }
-  };
+  // const handleCreateUser = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await API.post("/admin/create-user", newUserForm);
+  //     setCreateUserMessage("User created successfully!");
+  //     setNewUserForm({
+  //       name: "",
+  //       password: ""
+  //     });
+  //     fetchData();
+  //     setTimeout(() => setCreateUserMessage(""), 3000);
+  //   } catch (err) {
+  //     setCreateUserMessage("Error: " + (err.response?.data?.msg || "Failed to create user"));
+  //   }
+  // };
 
   // Log attendance
   const handleLogAttendance = async (e) => {
     e.preventDefault();
     try {
       const response = await API.post("/admin/log-attendance", attendanceForm);
-      setAttendanceMessage("✓ Attendance logged!");
+      setAttendanceMessage("Attendance logged successfully!");
       setAttendanceForm({ user_id: "", day_number: "", status: "in" });
       setTimeout(() => setAttendanceMessage(""), 2000);
     } catch (err) {
-      setAttendanceMessage("✗ Error: " + (err.response?.data?.msg || "Failed to log attendance"));
+      setAttendanceMessage("Error: " + (err.response?.data?.msg || "Failed to log attendance"));
     }
   };
 
@@ -147,15 +147,15 @@ export default function AdminDashboard() {
         >
           Attendance
         </button>
-        <button
+        {/* <button
           style={{
             ...styles.tabBtn,
             ...(activeTab === "createUser" ? styles.tabBtnActive : {})
           }}
           onClick={() => setActiveTab("createUser")}
         >
-          Create User
-        </button>
+         Create User 
+        </button> */}
         <button
           style={{
             ...styles.tabBtn,
@@ -465,9 +465,9 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <button type="submit" style={styles.submitBtn}>
+            {/* <button type="submit" style={styles.submitBtn}>
               Create User
-            </button>
+            </button> */}
           </form>
           {createUserMessage && (
             <p style={styles.message}>{createUserMessage}</p>

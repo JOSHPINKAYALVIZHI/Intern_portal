@@ -6,6 +6,7 @@ export default function ProfileEdit() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState({
     name: "",
+    department: "",
     college_email: "",
     linkedin: "",
     github: ""
@@ -21,10 +22,13 @@ export default function ProfileEdit() {
   const fetchProfile = async () => {
     try {
       const res = await API.get("/dashboard");
+      
       const profileData = res.data.profile;
+       console.log( res.data);
       setProfile({
         name: profileData.name || "",
         college_email: profileData.college_email || "",
+        department: profileData.department || "",
         linkedin: profileData.linkedin || "",
         github: profileData.github || ""
       });
@@ -82,7 +86,17 @@ export default function ProfileEdit() {
               required
             />
           </div>
-
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Department</label>
+            <input
+              style={styles.input}
+              type="text"
+              name="department"
+              value={profile.department}
+              onChange={handleChange}
+              required
+            />
+          </div>
           <div style={styles.formGroup}>
             <label style={styles.label}>College Email</label>
             <input

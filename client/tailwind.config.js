@@ -10,17 +10,19 @@ export default {
 
       /* 🎨 Color System */
       colors: {
-        background: "#F5EBDD",
-        card: "#FFF8F0",
-        primary: "#C8B6FF",
-        primaryHover: "#B8A4F4",
-        accent: "#A78BFA",
-        success: "#B9FBC0",
-        warning: "#FFD6A5",
-        danger: "#FFADAD",
-        textDark: "#4A4A4A",
-        muted: "#7D7D7D"
-      },
+  background: "#F5EBDD",
+  card: "#FFF8F0",
+
+  primary: "#1E3A8A",
+  primaryHover: "#1E40AF",
+  accent: "#3B82F6",
+
+  success: "#B9FBC0",
+  warning: "#FFD6A5",
+  danger: "#FFADAD",
+  textDark: "#4A4A4A",
+  muted: "#7D7D7D"
+},
 
       /* 💎 Shadows */
       boxShadow: {
