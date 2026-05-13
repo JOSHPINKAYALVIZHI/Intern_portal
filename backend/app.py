@@ -21,7 +21,7 @@ def create_app():
     # Configure CORS for React frontend
     CORS(
         app,
-        resources={r"/*": {"origins": ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]}},
+        resources={r"/*": {"origins": ["http://localhost:5173", "https://intern-portal-3hs9acopb-joshpinkayalvizhis-projects.vercel.app"]}},
         allow_headers=["Content-Type", "Authorization"],
         supports_credentials=True
     )
@@ -73,7 +73,8 @@ def create_app():
         return '', 200
 
     return app
-
+    with app.app_context():
+        db.create_all()
 app = create_app()
 
 if __name__ == "__main__":
