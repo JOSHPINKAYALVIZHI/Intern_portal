@@ -317,7 +317,7 @@ def upload_doc(day):
     
     file.save(filepath)
     
-    file_url = f"http://localhost:5000/uploads/{filename}"
+    file_url = f"https://intern-portal-nepj.onrender.com{filename}"
 
     progress = DailyProgress.query.filter_by(
     user_id=user_id,
@@ -353,7 +353,7 @@ def upload_leetcode(day):
     
     file.save(filepath)
     
-    file_url = f"http://localhost:5000/uploads/{filename}"
+    file_url = f"https://intern-portal-nepj.onrender.com{filename}"
 
     progress = DailyProgress.query.filter_by(
     user_id=user_id,
