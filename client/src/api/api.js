@@ -3,8 +3,7 @@ import axios from "axios";
 
 
 const API = axios.create({
-  baseURL: "intern-portal-cyan.vercel.app
-",
+  baseURL: "intern-portal-cyan.vercel.app",
   withCredentials: true
 });
 
