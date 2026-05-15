@@ -21,7 +21,7 @@ def create_app():
     # Configure CORS for React frontend
     CORS(
         app,
-        resources={r"/*": {"origins": ["http://localhost:5173", "https://intern-portal-3hs9acopb-joshpinkayalvizhis-projects.vercel.app"]}},
+        resources={r"/*": {"origins": ["http://localhost:5173", "https://intern-portal-3hs9acopb-joshpinkayalvizhis-projects.vercel.app","intern-portal-cyan.vercel.app"]}},
         allow_headers=["Content-Type", "Authorization"],
         supports_credentials=True
     )
