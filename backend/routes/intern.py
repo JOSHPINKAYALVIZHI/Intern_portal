@@ -1,3 +1,5 @@
+import profile
+
 from flask import Blueprint, jsonify, request, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import User, DailyProgress, Blog, FinalProject,  Profile
@@ -169,7 +171,18 @@ def dashboard():
         db.session.commit()
 
     activity = []
+    blogs = Blog.query.filter_by(user_id=user_id).all()
 
+    submitted_blog_days = []
+
+    if len(blogs) >= 1:
+        submitted_blog_days.append(7)
+
+    if len(blogs) >= 2:
+        submitted_blog_days.append(14)
+
+    if len(blogs) >= 3:
+        submitted_blog_days.append(21)
     for i in range(1, 22):
 
         progress_row = DailyProgress.query.filter_by(
@@ -186,10 +199,11 @@ def dashboard():
                 status = "partial"
 
         activity.append({
-        "day": i,
-        "status": status,
-        "doc_url": progress_row.daily_doc_url if progress_row else None,
-        "leetcode_url": progress_row.leetcode_pdf if progress_row else None
+    "day": i,
+    "status": status,
+    "doc_url": progress_row.daily_doc_url if progress_row else None,
+    "leetcode_url": progress_row.leetcode_pdf if progress_row else None,
+    "blog_submitted": i in submitted_blog_days
 })
 
     blog_count = Blog.query.filter_by(user_id=user_id).count()
@@ -204,7 +218,7 @@ def dashboard():
             "college_email": profile.college_email,
             "linkedin": profile.linkedin,
             "github": profile.github,
-            "total_points": user.total_points if user.total_points else 0
+            "total_points": profile.total_points if profile.total_points else 0
         },
         "blog_count": blog_count,
         "activity_grid": activity,
@@ -255,18 +269,15 @@ def setup_profile():
 
     if not existing:
 
-        roadmap = ROADMAPS.get(profile.domain, [])
+        for i in range(1, 22):
 
-        for i, item in enumerate(roadmap, start=1):
+          progress = DailyProgress(
+           user_id=user_id,
+           day_number=i,
+           task=f"Day {i} Task",
+        )
 
-            progress = DailyProgress(
-                user_id=user_id,
-                day_number=i,
-                task=item["title"],
-                
-            )
-
-            db.session.add(progress)
+          db.session.add(progress)
 
         db.session.commit()
 
@@ -285,16 +296,18 @@ def add_blog():
     user_id = int(get_jwt_identity())
 
     blog = Blog(
-        user_id=user_id,
-        medium_link=data["link"],
-        blog_date=data["date"]
+    user_id=user_id,
+    medium_link=data["link"],
+    blog_date=data["date"],
+    
+
     )
 
     db.session.add(blog)
 
     profile = Profile.query.filter_by(user_id=user_id).first()
-    profile.total_points += 40
 
+    profile.total_points = (profile.total_points or 0) + 40
     db.session.commit()
 
     return jsonify({"msg": "Blog submitted"})
@@ -324,8 +337,8 @@ def upload_doc(day):
     day_number=day
 ).first()
     profile = Profile.query.filter_by(user_id=user_id).first()
-    profile.total_points += 5
 
+    profile.total_points = (profile.total_points or 0) + 5
     if not progress:
         progress = DailyProgress(
         user_id=user_id,
@@ -360,7 +373,8 @@ def upload_leetcode(day):
     day_number=day
 ).first()
     profile = Profile.query.filter_by(user_id=user_id).first()
-    profile.total_points += 5
+
+    profile.total_points = (profile.total_points or 0) + 5
     if not progress:
         progress = DailyProgress(
         user_id=user_id,
@@ -446,14 +460,31 @@ def get_my_submissions():
     submissions = DailyProgress.query.filter_by(user_id=user_id).order_by(DailyProgress.day_number).all()
     
     data = []
+
+    blogs = Blog.query.filter_by(user_id=user_id).all()
+
     for sub in submissions:
+
+        blog_link = None
+
+        if sub.day_number == 7 and len(blogs) >= 1:
+            blog_link = blogs[0].medium_link
+
+        elif sub.day_number == 14 and len(blogs) >= 2:
+            blog_link = blogs[1].medium_link
+
+        elif sub.day_number == 21 and len(blogs) >= 3:
+            blog_link = blogs[2].medium_link
+
         data.append({
             "day": sub.day_number,
             "daily_doc_url": sub.daily_doc_url,
             "leetcode_pdf": sub.leetcode_pdf,
+            "blog_link": blog_link,
             "leet_approved": sub.leet_approved,
             "leet_points": sub.leet_points
         })
+       
     
     return jsonify({
         "profile": {
