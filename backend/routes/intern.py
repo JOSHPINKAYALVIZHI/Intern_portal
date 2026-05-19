@@ -317,7 +317,7 @@ def upload_doc(day):
     
     file.save(filepath)
     
-    file_url = f"https://intern-portal-nepj.onrender.com{filename}"
+    file_url = f"https://intern-portal-nepj.onrender.com/uploads/{filename}"
 
     progress = DailyProgress.query.filter_by(
     user_id=user_id,
