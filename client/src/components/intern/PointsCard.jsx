@@ -14,13 +14,13 @@ export default function PointsCard({ title, value }) {
       return;
     }
 
-    if (value > displayValue) {
-      confetti({
-        particleCount: 60,
-        spread: 70,
-        colors: ["#C8B6FF", "#A78BFA", "#FFD6A5"]
-      });
-    }
+    // if (value > displayValue) {
+    //   confetti({
+    //     particleCount: 60,
+    //     spread: 70,
+    //     colors: ["#C8B6FF", "#A78BFA", "#FFD6A5"]
+    //   });
+    // }
 
     let start = 0;
 

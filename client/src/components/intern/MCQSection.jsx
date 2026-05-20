@@ -45,11 +45,11 @@ export default function MCQSection({ activity, refreshDashboard }) {
       setMessage(`Score: ${res.data.score}`);
       setSubmitted(true);
 
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        colors: ["#C8B6FF", "#A78BFA"]
-      });
+      // confetti({
+      //   particleCount: 80,
+      //   spread: 70,
+      //   colors: ["#C8B6FF", "#A78BFA"]
+      // });
 
       refreshDashboard(); // 🔥 Auto refresh
 

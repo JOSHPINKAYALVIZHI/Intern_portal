@@ -37,11 +37,11 @@ export default function Navbar() {
 
         <div className="flex items-center gap-4">
         <button
-          onClick={() => navigate("/profile")}
-          className="mr-4"
-        >
-          Profile
-        </button>
+            onClick={() => navigate("/profile")}
+            className="mr-4 text-white font-medium hover:text-gray-200"
+          >
+            Profile
+          </button>
           {/* Dark Mode Toggle */}
          
           {/* Logout */}
