@@ -10,7 +10,11 @@ export default function InternDashboard() {
   const [files, setFiles] = useState({});
   const [docs, setDocs] = useState({});
   const [blogLinks, setBlogLinks] = useState({});
-
+  const [finalProject, setFinalProject] = useState({
+  github: "",
+  deploy: "",
+  demo: ""
+});
   const navigate = useNavigate();
 
   /* -----------------------------
@@ -145,15 +149,36 @@ const progressPercent = Math.round(
     }
 
     await API.post("/intern/add-blog", {
-      date: new Date().toISOString().split("T")[0],
-      link
-    });
+  date: new Date().toISOString().split("T")[0],
+  link,
+  day
+});
 
     alert("Blog submitted!");
 
     fetchDashboard();
   };
+  const submitFinalProject = async () => {
 
+  try {
+
+    await API.post("/intern/submit-final", {
+      github: finalProject.github,
+      deploy: finalProject.deploy,
+      demo: finalProject.demo
+    });
+
+    alert("Final project submitted successfully!");
+
+    fetchDashboard();
+
+  } catch (err) {
+
+    alert(err.response?.data?.msg || "Submission failed");
+
+  }
+
+};
   return (
 
     <InternLayout>
@@ -295,9 +320,14 @@ className="border p-1 rounded"
 
 <button
 onClick={()=>uploadDailyDoc(d.day)}
-className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
+disabled={d.doc_url}
+className={`px-4 py-1 rounded text-white ${
+  d.doc_url
+    ? "bg-green-500 cursor-not-allowed"
+    : "bg-blue-500 hover:bg-blue-600"
+}`}
 >
-Upload
+{d.doc_url ? "Uploaded" : "Upload"}
 </button>
 </div>
 
@@ -315,9 +345,14 @@ className="border p-1 rounded"
 
 <button
 onClick={()=>uploadLeetCode(d.day)}
-className="bg-blue-900 hover:bg-blue-950 text-white px-4 py-1 rounded"
+disabled={d.leetcode_url}
+className={`px-4 py-1 rounded text-white ${
+  d.leetcode_url
+    ? "bg-green-500 cursor-not-allowed"
+    : "bg-blue-900 hover:bg-blue-950"
+}`}
 >
-Upload
+{d.leetcode_url ? "Uploaded" : "Upload"}
 </button>
 </div>
 
@@ -335,21 +370,40 @@ Final Project Submission
 type="text"
 placeholder="GitHub Repository Link"
 className="border p-2 rounded w-full"
+onChange={(e)=>
+  setFinalProject({
+    ...finalProject,
+    github: e.target.value
+  })
+}
 />
 
 <input
 type="text"
 placeholder="Live Deployment Link"
 className="border p-2 rounded w-full"
+onChange={(e)=>
+  setFinalProject({
+    ...finalProject,
+    deploy: e.target.value
+  })
+}
 />
 
 <input
 type="text"
 placeholder="Demo Video Link"
 className="border p-2 rounded w-full"
+onChange={(e)=>
+  setFinalProject({
+    ...finalProject,
+    demo: e.target.value
+  })
+}
 />
 
 <button
+onClick={submitFinalProject}
 className="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded"
 >
 Submit Final Project
@@ -404,9 +458,16 @@ onChange={(e)=>setBlogLinks({
 
 <button
 onClick={()=>submitBlog(d.day)}
-className="ml-3 bg-blue-700 text-white px-4 py-2 rounded"
+disabled={data.blog_count >= d.day / 7}
+className={`ml-3 text-white px-4 py-2 rounded ${
+  data.blog_count >= d.day / 7
+    ? "bg-green-500 cursor-not-allowed"
+    : "bg-blue-700"
+}`}
 >
-Submit Blog
+{data.blog_count >= d.day / 7
+  ? "Blog Submitted"
+  : "Submit Blog"}
 </button>
 
 </div>

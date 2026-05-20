@@ -290,7 +290,10 @@ export default function AdminDashboard() {
                               <span style={styles.pending}>No</span>
                             )}
                           </td>
-                          <td>{sub.leet_points}</td>
+                          <td>
+                            {(sub.daily_doc_url ? 5 : 0) +
+                            (sub.leetcode_pdf ? 5 : 0)}
+                          </td>
                           <td>
                             {sub.leetcode_pdf && !sub.leet_approved && (
                               <>

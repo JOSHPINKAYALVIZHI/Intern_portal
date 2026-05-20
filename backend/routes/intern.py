@@ -218,7 +218,11 @@ def dashboard():
             "college_email": profile.college_email,
             "linkedin": profile.linkedin,
             "github": profile.github,
-            "total_points": profile.total_points if profile.total_points else 0
+            "total_points": sum(
+    (5 if p.daily_doc_url else 0) +
+    (5 if p.leetcode_pdf else 0)
+    for p in DailyProgress.query.filter_by(user_id=user.id).all()
+)
         },
         "blog_count": blog_count,
         "activity_grid": activity,

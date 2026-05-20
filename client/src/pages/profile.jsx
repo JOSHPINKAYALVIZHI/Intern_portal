@@ -33,6 +33,8 @@ export default function Profile() {
     try {
       const res = await API.get("/dashboard");
        console.log( res.data);
+       console.log(profile
+       )
       setProfile(res.data.profile);
       setRoadmap(res.data.activity_grid);
     } catch (err) {
@@ -184,6 +186,9 @@ Total Internship Points
               <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>Day</th>
               <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>Daily Doc</th>
               <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>LeetCode PDF</th>
+
+              <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>Blog</th>
+
               <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>Approved</th>
               <th style={{ padding: "10px", border: "1px solid #ddd", textAlign: "left" }}>Points</th>
             </tr>
@@ -210,6 +215,24 @@ Total Internship Points
                     <span style={{ color: "#999" }}>-</span>
                   )}
                 </td>
+                <td style={{ padding: "10px", border: "1px solid #ddd" }}>
+  {sub.blog_link ? (
+    <a
+      href={sub.blog_link}
+      target="_blank"
+      rel="noreferrer"
+      style={{
+        color: "#0a1f3f",
+        textDecoration: "none",
+        fontWeight: "bold"
+      }}
+    >
+      View Blog
+    </a>
+  ) : (
+    <span style={{ color: "#999" }}>-</span>
+  )}
+</td>
                 <td style={{ padding: "10px", border: "1px solid #ddd" }}>
                   {sub.leet_approved ? (
                     <span style={{ color: "#22c55e", fontWeight: "bold" }}>Yes</span>

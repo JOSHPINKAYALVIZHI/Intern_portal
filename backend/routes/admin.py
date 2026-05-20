@@ -1,3 +1,5 @@
+import profile
+
 from flask import Blueprint, jsonify, request, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from models import Blog, FinalProject, User, DailyProgress, Profile, Attendance
@@ -112,26 +114,17 @@ def approve_by_id(progress_id):
     if progress.leet_approved:
         return jsonify({"msg": "Already approved"}), 400
 
-    user = User.query.get(progress.user_id)
-
-    if not user:
-        return jsonify({"msg": "User not found"}), 404
-
     progress.leet_approved = True
     progress.leet_points = 5
 
-    if user.total_points is None:
-        user.total_points = 0
-    user.total_points += 5
 
     db.session.commit()
 
     return jsonify({
         "msg": "LeetCode Approved",
-        "user": user.name,
+        
         "day": progress.day_number,
-        "points_added": 5,
-        "total_points": user.total_points
+        
     })
 
 
@@ -187,27 +180,16 @@ def approve_leetcode(user_id, day):
     if progress.leet_approved:
         return jsonify({"msg": "Already approved"}), 400
 
-    user = User.query.get(user_id)
-
-    if not user:
-        return jsonify({"msg": "User not found"}), 404
-
-    # ✅ Safe update
     progress.leet_approved = True
     progress.leet_points = 5
-
-    if user.total_points is None:
-        user.total_points = 0
-    user.total_points += 5
 
     db.session.commit()
 
     return jsonify({
         "msg": "LeetCode Approved",
-        "user": user.name,
+       
         "day": day,
-        "points_added": 5,
-        "total_points": user.total_points
+        
     })
 
 
@@ -265,14 +247,19 @@ def approve_final(user_id):
         return jsonify({"msg": "User not found"}), 404
 
     final.approved = True
-    user.total_points += 50
+    profile = Profile.query.filter_by(user_id=user_id).first()
+
+    if profile.total_points is None:
+      profile.total_points = 0
+
+      profile.total_points += 50
 
     db.session.commit()
 
     return jsonify({
         "msg": "Final project approved",
         "points_added": 50,
-        "total_points": user.total_points
+        "total_points": profile.total_points
     })
 
 
@@ -303,13 +290,17 @@ def get_all_interns_detailed():
         submissions = []
         for p in progress_list:
             submission = {
-                "id": p.id,
-                "day": p.day_number,
-                "daily_doc_url": p.daily_doc_url,
-                "leetcode_pdf": p.leetcode_pdf,
-                "leet_approved": p.leet_approved,
-                "leet_points": p.leet_points
-            }
+                    "id": p.id,
+                    "day": p.day_number,
+                    "daily_doc_url": p.daily_doc_url,
+                    "leetcode_pdf": p.leetcode_pdf,
+                    "leet_approved": p.leet_approved,
+
+                    "points": (
+                        (5 if p.daily_doc_url else 0) +
+                        (5 if p.leetcode_pdf else 0)
+                    )
+                }
             submissions.append(submission)
 
         data.append({
@@ -319,7 +310,11 @@ def get_all_interns_detailed():
             "department": profile.department,
             "domain": profile.domain,
             "college_email": profile.college_email,
-            "total_points": user.total_points if user.total_points else 0,
+            "total_points": sum(
+    (5 if p.daily_doc_url else 0) +
+    (5 if p.leetcode_pdf else 0)
+    for p in progress_list
+),
             "submissions": submissions,
             "blogs": len(blogs),
             "final_project": {
@@ -367,7 +362,11 @@ def get_intern_details(user_id):
             "college_email": profile.college_email,
             "linkedin": profile.linkedin,
             "github": profile.github,
-            "total_points": user.total_points  # ✅ FIXED
+            "total_points": sum(
+    (5 if p.daily_doc_url else 0) +
+    (5 if p.leetcode_pdf else 0)
+    for p in progress
+)
         },
 
         "progress": [
@@ -397,21 +396,17 @@ def leaderboard():
     if not is_admin(identity):
         return jsonify({"msg": "Only admin allowed"}), 403
 
-    users = User.query.filter_by(role="INTERN")\
-        .order_by(User.total_points.desc())\
-        .all()
+    profiles = Profile.query.order_by(Profile.total_points.desc()).all()
 
     data = []
 
-    for u in users:
-        profile = Profile.query.filter_by(user_id=u.id).first()
-        if profile:
-            data.append({
-                "user_id": u.id,
-                "name": profile.name,
-                "reg_no": profile.reg_no,
-                "points": u.total_points if u.total_points is not None else 0  # ✅ DEFAULT TO 0
-            })
+    for p in profiles:
+        data.append({
+            "user_id": p.user_id,
+            "name": p.name,
+            "reg_no": p.reg_no,
+            "points": p.total_points if p.total_points else 0
+        })
 
     return jsonify(data)
 
